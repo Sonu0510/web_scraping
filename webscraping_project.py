@@ -2,6 +2,9 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import plotly.express as px
 
 url = "https://www.worldometers.info/coronavirus/"
 
@@ -79,7 +82,6 @@ column_name = [
 ]
 
 
-
 # list_2d = [[1,2],[3,4]]
 df = pd.DataFrame(cleaned_data, columns= column_name)
 # print(df)
@@ -87,6 +89,63 @@ df = pd.DataFrame(cleaned_data, columns= column_name)
 first_five_row = df.head()
 # print(first_five_row)
 
+
 df.to_csv("covid_data.csv", index=	False)
+
+# Read csv file
+df_read = pd.read_csv("covid_data.csv")
+# print(df_read.head())
+
+# print(df_read.isnull().sum())
+
+missing_data = df_read.isnull().sum()
+# print(missing_data)
+
+# Visulaization
+# print(df_read.isnull())
+
+
+# sns.heatmap(df_read.isnull().T)
+# plt.show()
+
+# missing_data.plot(kind="barh") # h is added for horizontal bar graph
+# plt.title("Show missing data")
+# plt.xlabel("Number of missing data country")
+# plt.ylabel("Category")
+# plt.show()
+
+# print(missing_data.values)
+# print(missing_data.index)
+
+# Bar Diagram
+# fig = px.bar(x = missing_data.index, y = missing_data.values)
+# fig.show()
+
+# pie-chart
+# fig = px.pie(values = missing_data.values, names = missing_data.index)
+# fig.show()
+
+
+""" Country wise total cases """
+
+# print(df_read)
+
+# Check daty_types before plotting
+# print(df_read.dtypes)
+
+
+# Data preparation - typecast object to integer
+# total_cases_in_int_data = df_read["total_cases"].map(lambda x: int(x.replace(",", "")))
+# print(total_cases_in_int_data)
+
+
+x = df_read["names"]
+y = df_read["total_cases"].map(lambda x: int(x.replace(",", "")))
+
+fig = px.bar(x=x, y =y)
+fig.show()
+
+
+
 
 
